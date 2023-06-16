@@ -1,0 +1,12 @@
+{
+    "name": "relesssar/esedo",
+    "version": "1.0",
+    "type": "library",
+    "license": "MIT",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Relesssar\\Esedo\\":"src/"
+        }
+    }
+}
