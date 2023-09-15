@@ -174,8 +174,8 @@ class Esedo
         return $query;
     }
 
-    public function get_eds_download_env($name) {
-        $xml = $this->eds_download_xml($name);
+    public function get_eds_download_env($fileid) {
+        $xml = $this->eds_download_xml($fileid);
         $envelop_xml = $this->soapEnvelop_EDS('','7ea6369f-18c5-4633-ad73-19de35883e0b',$xml);
         return $envelop_xml;
     }
@@ -191,7 +191,7 @@ class Esedo
         $date_string = date('Y-m-d\TH:i:s.');
         $date_string = $date_string . '000+06:00';
         //if ($method=='upload') {
-            $enveolpe = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:typ=\"http://bip.bee.kz/SyncChannel/v10/Types\" xmlns:xenc=\"http://www.w3.org/2001/04/xmlenc#\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><soapenv:Header xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"/><soap:Body><typ:SendMessage><request><requestInfo><messageId>' . $messageId . '</messageId><correlationId/><serviceId>EDS_TEMP_FILES</serviceId><messageDate>' . $date_string . '</messageDate><routeId/><sender><senderId>' . $this->senderid . '</senderId><password>' . $this->senderpass . '</password></sender><properties/><sessionId>{3c3ba84d-6b6a-4b5d-b3b4-90b1b8f00f2d}</sessionId></requestInfo><requestData><data>'.($this->xmltoJson( $this->xmlFlat($data) )).'</data></requestData></request></typ:SendMessage></soap:Body></soap:Envelope>';
+        $enveolpe = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:typ=\"http://bip.bee.kz/SyncChannel/v10/Types\" xmlns:xenc=\"http://www.w3.org/2001/04/xmlenc#\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><soapenv:Header xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"/><soap:Body><typ:SendMessage><request><requestInfo><messageId>' . $messageId . '</messageId><correlationId/><serviceId>EDS_TEMP_FILES</serviceId><messageDate>' . $date_string . '</messageDate><routeId/><sender><senderId>' . $this->senderid . '</senderId><password>' . $this->senderpass . '</password></sender><properties/><sessionId>{3c3ba84d-6b6a-4b5d-b3b4-90b1b8f00f2d}</sessionId></requestInfo><requestData><data>'.($this->xmltoJson( $this->xmlFlat($data) )).'</data></requestData></request></typ:SendMessage></soap:Body></soap:Envelope>';
         //}
         return $enveolpe;
     }
@@ -224,6 +224,32 @@ class Esedo
             $enveolpe = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:typ=\"http://bip.bee.kz/SyncChannel/v10/Types\" xmlns:xenc=\"http://www.w3.org/2001/04/xmlenc#\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><soapenv:Header xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"/><soap:Body><typ:SendMessage><request><requestInfo><messageId>' . $messageId . '</messageId><correlationId/><serviceId>ENSI_SeGetDataGetItems</serviceId><messageDate>' . $date_string . '</messageDate><routeId/><sender><senderId>' . $this->senderid . '</senderId><password>' . $this->senderpass . '</password></sender><properties/><sessionId>{3c3ba84d-6b6a-4b5d-b3b4-90b1b8f00f2d}</sessionId></requestInfo><requestData><data>'.($this->xmltoJson( $this->xmlFlat($data) )).'</data></requestData></request></typ:SendMessage></soap:Body></soap:Envelope>';
         }
         return $enveolpe;
+    }
+
+    public function responseSoap($body) {
+        $envelop = '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" SOAP-ENV:mustUnderstand="1"><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-5CF9C938CC6BB3D75F169321047477492892"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#gost34310-gost34311"/><ds:Reference URI="#id-5CF9C938CC6BB3D75F169321047477392891"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#gost34311"/><ds:DigestValue>QGyNHlbqE8D0rdb+DHvOOGsPWGyQqrek1i9I5G+fELk=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>tPBCql2TaQuHBSGXO12hm10N+PHpUuPjjsDkKHr7T37/8ZzKpcm+G6aR70qZo3lHkGUmhjQoaHsDnmUjJBhdew==</ds:SignatureValue><ds:KeyInfo Id="KI-5CF9C938CC6BB3D75F169321047477392889"><wsse:SecurityTokenReference wsu:Id="STR-5CF9C938CC6BB3D75F169321047477392890"><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>CN=ҰЛТТЫҚ КУӘЛАНДЫРУШЫ ОРТАЛЫҚ (GOST),C=KZ</ds:X509IssuerName><ds:X509SerialNumber>231278386876974093604887536074399274144411123947</ds:X509SerialNumber></ds:X509IssuerSerial></ds:X509Data></wsse:SecurityTokenReference></ds:KeyInfo></ds:Signature></wsse:Security></SOAP-ENV:Header><soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-5CF9C938CC6BB3D75F169321047477392891">'.$body.'</soap:Body></soap:Envelope>';
+        return $envelop;
+    }
+
+    public function responseSuccessSoap($messageId,$responseDate) {
+        return $this->responseSoap($this->responseSuccess($messageId,$responseDate));
+    }
+
+    public function responseSuccess($messageId,$responseDate) {
+        $xml = '<SendMessageResponse xmlns="http://bip.bee.kz/SyncChannel/v10/Types">
+            <response xmlns="">
+                <responseInfo>
+                    <messageId>'.$messageId.'</messageId>
+                    <responseDate>'.$responseDate.'</responseDate>
+                    <status>
+                        <code>SCSS001</code>
+                        <message>Message has been processed successfully</message>
+                    </status>
+                </responseInfo>
+                <responseData/>
+            </response>
+        </SendMessageResponse>';
+        return $xml;
     }
 
 
